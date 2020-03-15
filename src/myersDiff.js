@@ -71,7 +71,7 @@ function myersDiff(oldStr, newStr) {
                 yEnd++
                 snake++
             }
-            
+
             v[k + maxStep] = xEnd
 
             snakes.unshift(new Snake(xStart, yStart, xEnd, yEnd))

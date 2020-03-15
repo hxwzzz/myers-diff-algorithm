@@ -25,27 +25,27 @@ function myersDiff(oldStr, newStr) {
                 yEnd++
                 snake++
             }
-            
+
             v[k + maxStep] = xEnd
 
-            snakes.unshift([xStart, yStart, xEnd, yEnd])
+            snakes.unshift({ xStart, yStart, xEnd, yEnd })
             console.log('d=' + d + ', k=' + k + ', start=(' + xStart + ',' + yStart + '), mid=(' + xMid + ',' + yMid + '), end=(' + xEnd + ',' + yEnd + ')')
 
             if (xEnd >= oldContent.length && yEnd >= newContent.length) {
                 console.log("Found!")
                 let resList = []
                 let currentSnake = snakes[0]
-                let outStr = '(' + currentSnake[0] + ',' + currentSnake[1] + ') <- (' + currentSnake[2] + ',' + currentSnake[3] + ')'
+                let outStr = '(' + currentSnake.xEnd + ',' + currentSnake.yEnd + ') <- (' + currentSnake.xStart + ',' + currentSnake.yStart + ')'
                 console.log(outStr)
                 resList.push(outStr)
                 for (let i = 1; i < snakes.length - 1; i++) {
                     let tmpSnake = snakes[i]
-                    if (tmpSnake[0] === currentSnake[2] && tmpSnake[1] === currentSnake[3]) {
+                    if (tmpSnake.xEnd === currentSnake.xStart && tmpSnake.yEnd === currentSnake.yStart) {
                         currentSnake = tmpSnake
-                        outStr = '(' + currentSnake[0] + ',' + currentSnake[1] + ') <- (' + currentSnake[2] + ',' + currentSnake[3] + ')'
+                        outStr = '(' + currentSnake.xEnd + ',' + currentSnake.yEnd + ') <- (' + currentSnake.xStart + ',' + currentSnake.yStart + ')'
                         console.log(outStr)
                         resList.push(outStr)
-                        if ((currentSnake[2] === 0) && (currentSnake[3] === 0)) {
+                        if ((currentSnake.yStart === 0) && (currentSnake.xEnd === 0)) {
                             break
                         }
                     }
