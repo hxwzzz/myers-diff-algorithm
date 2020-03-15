@@ -36,7 +36,7 @@ class Snake:
     def setyEnd(self, yEnd):
         self.__yEnd = yEnd
 
-def main(oldStr, newStr):
+def myersDiff(oldStr, newStr):
     oldContent = list(oldStr)
     newContent = list(newStr)
 
@@ -93,7 +93,7 @@ if __name__ == "__main__":
     try:
         oldStr= sys.argv[1]
         newStr= sys.argv[2]
-        main(oldStr, newStr)
+        myersDiff(oldStr, newStr)
     except Exception as e:
         print(sys.argv)
         print(e)
