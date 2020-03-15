@@ -28,16 +28,22 @@ function myersDiff(oldStr, newStr) {
 
             v[k + maxStep] = xEnd
 
-            snakes.unshift({ xStart, yStart, xEnd, yEnd })
+            snakes.unshift({ xStart, yStart, xMid, yMid, xEnd, yEnd })
             console.log('d=' + d + ', k=' + k + ', start=(' + xStart + ',' + yStart + '), mid=(' + xMid + ',' + yMid + '), end=(' + xEnd + ',' + yEnd + ')')
 
             if (xEnd >= oldContent.length && yEnd >= newContent.length) {
                 console.log("Found!")
                 let resList = []
+                let mainPath = [];
                 let currentSnake = snakes[0]
                 let outStr = '(' + currentSnake.xEnd + ',' + currentSnake.yEnd + ') <- (' + currentSnake.xStart + ',' + currentSnake.yStart + ')'
                 console.log(outStr)
                 resList.push(outStr)
+                mainPath.unshift({
+                    xStart: currentSnake.xStart,
+                    xMid: currentSnake.xMid,
+                    xEnd: currentSnake.xEnd
+                })
                 for (let i = 1; i < snakes.length - 1; i++) {
                     let tmpSnake = snakes[i]
                     if (tmpSnake.xEnd === currentSnake.xStart && tmpSnake.yEnd === currentSnake.yStart) {
@@ -45,14 +51,61 @@ function myersDiff(oldStr, newStr) {
                         outStr = '(' + currentSnake.xEnd + ',' + currentSnake.yEnd + ') <- (' + currentSnake.xStart + ',' + currentSnake.yStart + ')'
                         console.log(outStr)
                         resList.push(outStr)
+                        mainPath.unshift({
+                            xStart: currentSnake.xStart,
+                            xMid: currentSnake.xMid,
+                            xEnd: currentSnake.xEnd
+                        })
                         if ((currentSnake.yStart === 0) && (currentSnake.xEnd === 0)) {
                             break
                         }
                     }
                 }
+                printRes(mainPath, oldStr, newStr)
                 return resList
             }
         }
     }
     return []
+}
+
+function printRes(snakes, oldStr, newStr) {
+    let grayColor = 'color: gray'
+    let redColor = 'color: red'
+    let greenColor = 'color: green'
+    let consoleStr = ''
+    let args = []
+    let yOffset = 0
+
+    snakes.forEach((snake, index) => {
+        let currentPos = snake.xStart
+
+        if (index === 0 && snake.xStart !== 0) {
+            for (let j = 0; j < snake.xStart; j++) {
+                consoleStr += `%c${oldStr[j]}`
+                args.push(grayColor)
+                yOffset++
+            }
+        }
+
+        if (snake.xMid - snake.xStart == 1) {
+            // 删除
+            consoleStr += `%c${oldStr[snake.xStart]}`
+            args.push(redColor)
+            currentPos = snake.xMid
+        } else {
+            // 添加
+            consoleStr += `%c${newStr[yOffset]}`
+            args.push(greenColor)
+            yOffset++
+        }
+
+        // 不变
+        for (let i = 0; i < snake.xEnd - currentPos; i++) {
+            consoleStr += `%c${oldStr[currentPos + i]}`
+            args.push(grayColor)
+            yOffset++
+        }
+    })
+    console.log(consoleStr, ...args)
 }
