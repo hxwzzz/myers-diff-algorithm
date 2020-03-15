@@ -1,0 +1,15 @@
+Old String: <input type='text' id='old-str'><br>
+New String: <input type='text' id='new-str'><br>
+<button onclick='handelDiffClicked()'>Do Diff</button>
+<div id='result-area'></div>
+
+<script src='myersDiff.js'></script>
+<script>
+function handelDiffClicked() {
+    let oldStr = document.getElementById('old-str').value;
+    let newStr = document.getElementById('new-str').value;
+    console.log('Diff ' + oldStr + ' and ' + newStr + '.');
+    let diffRes = myersDiff(oldStr, newStr);
+    document.getElementById('result-area').innerHTML = diffRes.join('<br/>');
+}
+</script>
