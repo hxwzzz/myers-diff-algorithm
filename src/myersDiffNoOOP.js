@@ -3,16 +3,15 @@ function myersDiff(oldStr, newStr) {
     let newContent = newStr.split('')
 
     let lengthSum = oldContent.length + newContent.length
-    let maxStep = oldContent.length + newContent.length
-    let v = new Array(lengthSum * 2 + 1).fill(0)
+    let v = [0, 0] // make sure that v[1] is initialized
     let snakes = []
 
     for (let d = 0; d <= lengthSum; d++) {
         for (let k = -d; k <= d; k += 2) {
-            let down = (k === -d || (k !== d && (v[k - 1 + maxStep] < v[k + 1 + maxStep])))
+            let down = (k === -d || (k !== d && (v[k - 1] < v[k + 1])))
 
             let kPrev = down ? k + 1 : k - 1
-            let xStart = v[kPrev + maxStep]
+            let xStart = v[kPrev]
             let yStart = xStart - kPrev
             let xMid = down ? xStart : xStart + 1
             let yMid = xMid - k
@@ -26,7 +25,7 @@ function myersDiff(oldStr, newStr) {
                 snake++
             }
 
-            v[k + maxStep] = xEnd
+            v[k] = xEnd
 
             snakes.unshift({ xStart, yStart, xMid, yMid, xEnd, yEnd })
             console.log('d=' + d + ', k=' + k + ', start=(' + xStart + ',' + yStart + '), mid=(' + xMid + ',' + yMid + '), end=(' + xEnd + ',' + yEnd + ')')
