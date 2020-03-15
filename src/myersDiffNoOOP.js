@@ -3,14 +3,16 @@ function myersDiff(oldStr, newStr) {
     let newContent = newStr.split('')
 
     let lengthSum = oldContent.length + newContent.length
-    let v = [0, 0] // make sure that v[1] is initialized
-    let snakes = []
+    let v = { '1': 0 }
+    let vs = { '0': { '1': 0 } }
 
     for (let d = 0; d <= lengthSum; d++) {
+        let tmp = {}
+
         for (let k = -d; k <= d; k += 2) {
             let down = (k === -d || (k !== d && (v[k - 1] < v[k + 1])))
-
             let kPrev = down ? k + 1 : k - 1
+
             let xStart = v[kPrev]
             let yStart = xStart - kPrev
             let xMid = down ? xStart : xStart + 1
@@ -18,54 +20,58 @@ function myersDiff(oldStr, newStr) {
             let xEnd = xMid
             let yEnd = yMid
 
-            let snake = 0
             while (xEnd < oldContent.length && yEnd < newContent.length && oldContent[xEnd] == newContent[yEnd]) {
                 xEnd++
                 yEnd++
-                snake++
             }
 
             v[k] = xEnd
-
-            snakes.unshift({ xStart, yStart, xMid, yMid, xEnd, yEnd })
-            console.log('d=' + d + ', k=' + k + ', start=(' + xStart + ',' + yStart + '), mid=(' + xMid + ',' + yMid + '), end=(' + xEnd + ',' + yEnd + ')')
+            tmp[k] = xEnd
 
             if (xEnd >= oldContent.length && yEnd >= newContent.length) {
+                vs[d] = tmp
                 console.log("Found!")
-                let resList = []
-                let mainPath = [];
-                let currentSnake = snakes[0]
-                let outStr = '(' + currentSnake.xEnd + ',' + currentSnake.yEnd + ') <- (' + currentSnake.xStart + ',' + currentSnake.yStart + ')'
-                console.log(outStr)
-                resList.push(outStr)
-                mainPath.unshift({
-                    xStart: currentSnake.xStart,
-                    xMid: currentSnake.xMid,
-                    xEnd: currentSnake.xEnd
-                })
-                for (let i = 1; i < snakes.length - 1; i++) {
-                    let tmpSnake = snakes[i]
-                    if (tmpSnake.xEnd === currentSnake.xStart && tmpSnake.yEnd === currentSnake.yStart) {
-                        currentSnake = tmpSnake
-                        outStr = '(' + currentSnake.xEnd + ',' + currentSnake.yEnd + ') <- (' + currentSnake.xStart + ',' + currentSnake.yStart + ')'
-                        console.log(outStr)
-                        resList.push(outStr)
-                        mainPath.unshift({
-                            xStart: currentSnake.xStart,
-                            xMid: currentSnake.xMid,
-                            xEnd: currentSnake.xEnd
-                        })
-                        if ((currentSnake.yStart === 0) && (currentSnake.xEnd === 0)) {
-                            break
-                        }
-                    }
-                }
-                printRes(mainPath, oldStr, newStr)
-                return resList
+                console.log(vs)
+                let keySnakes = getSolution(vs, oldContent.length, newContent.length, d);
+                printRes(keySnakes, oldStr, newStr);
+                return
             }
         }
+        vs[d] = tmp
     }
-    return []
+}
+
+function getSolution(vs, oldLen, newLen, currentD) {
+    let mainPath = []
+    let p = { x: oldLen, y: newLen }
+    let d = currentD
+
+    for (; d > 0; d--) {
+        let v = vs[d]
+        let vPrev = vs[d - 1]
+        let k = p.x - p.y
+  
+        let xEnd = v[k]
+        let yEnd = xEnd - k
+      
+        let down = k == -d || k != d && vPrev[k + 1] > vPrev[k - 1]
+        let kPrev = down ? k + 1 : k - 1
+      
+        let xStart = vPrev[kPrev]
+        let yStart = xStart - kPrev
+      
+        let xMid = down ? xStart : xStart + 1
+        let yMid = xMid - k
+      
+        let outStr = '(' + xEnd + ',' + yEnd + ') <- (' + xStart + ',' + yStart + ')'
+        console.log(outStr)
+        mainPath.unshift({xStart, xMid, xEnd})
+  
+        p.x = xStart
+        p.y = yStart
+    }
+
+    return mainPath
 }
 
 function printRes(snakes, oldStr, newStr) {
@@ -106,5 +112,6 @@ function printRes(snakes, oldStr, newStr) {
             yOffset++
         }
     })
+
     console.log(consoleStr, ...args)
 }
