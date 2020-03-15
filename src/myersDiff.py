@@ -47,8 +47,8 @@ def myersDiff(oldStr, newStr):
 
     for d in range(0, lengthSum + 1):
         for k in range(-d, d + 2, 2):
-            print('d=', d, sep='', end=' ')
-            print('k=', k, sep='', end=' ')
+            print("d=", d, sep="", end=" ")
+            print("k=", k, sep="", end=" ")
             down = (k == -d or (k != d and (v[k - 1 + maxStep] < v[k + 1 + maxStep])))
 
             if (down):
@@ -74,17 +74,17 @@ def myersDiff(oldStr, newStr):
             v[k + maxStep] = xEnd
 
             snakes.insert(0, Snake(xStart, yStart, xEnd, yEnd))
-            print('start=(', xStart, ',', yStart, '), mid=(', xMid, ',', yMid, '), end=(', xEnd, ',', yEnd, ')', sep='')
+            print("start=(", xStart, ",", yStart, "), mid=(", xMid, ",", yMid, "), end=(", xEnd, ",", yEnd, ")", sep="")
 
             if (xEnd >= len(oldContent) and yEnd >= len(newContent)):
                 print("Found!")
                 currentSnake = snakes[0]
-                print('(', currentSnake.getxEnd(), ',', currentSnake.getyEnd(), ') <- (', currentSnake.getxStart(), ',', currentSnake.getyStart(), ')', sep='')
+                print("(", currentSnake.getxEnd(), ",", currentSnake.getyEnd(), ") <- (", currentSnake.getxStart(), ",", currentSnake.getyStart(), ")", sep="")
                 for i in range(1, len(snakes) - 1):
                     tmpSnake = snakes[i]
                     if (tmpSnake.getxEnd() == currentSnake.getxStart() and tmpSnake.getyEnd() == currentSnake.getyStart()):
                         currentSnake = tmpSnake
-                        print('(', currentSnake.getxEnd(), ',', currentSnake.getyEnd(), ') <- (', currentSnake.getxStart(), ',', currentSnake.getyStart(), ')', sep='')
+                        print("(", currentSnake.getxEnd(), ",", currentSnake.getyEnd(), ") <- (", currentSnake.getxStart(), ",", currentSnake.getyStart(), ")", sep="")
                         if ((currentSnake.getxStart() == 0) and (currentSnake.getyStart() == 0)):
                             break
                 return
